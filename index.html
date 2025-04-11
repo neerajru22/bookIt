@@ -2,29 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Book a Meeting | Vipany Global</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Appointment Booking</title>
+  <style>
+    body { font-family: sans-serif; max-width: 400px; margin: 40px auto; }
+    label, input, textarea { display: block; margin: 10px 0; width: 100%; }
+    button { padding: 10px 20px; background: #007BFF; color: white; border: none; cursor: pointer; }
+  </style>
 </head>
 <body>
-  <div class="form-container">
-    <form name="submit-to-google-sheet" id="booking-form">
-      <h2>Book a Meeting</h2>
 
-      <label for="clientName">Client Name</label>
-      <input type="text" id="clientName" name="Client Name" placeholder="Enter your name" required>
+  <h2>Book Your Appointment</h2>
 
-      <label for="meetingDate">Select Date</label>
-      <input type="date" id="meetingDate" name="Select Date" required>
+  <form id="appointment-form">
+    <label for="date">Date:</label>
+    <input type="date" id="date" required>
 
-      <label for="meetingTime">Select Time</label>
-      <input type="time" id="meetingTime" name="Select Time" required>
+    <label for="time">Time:</label>
+    <input type="time" id="time" required>
 
-      <button type="submit">Book</button>
+    <label for="notes">Notes (optional):</label>
+    <textarea id="notes"></textarea>
 
-      <p id="message"></p>
-    </form>
-    <footer>Powered by Vipany Global</footer>
-  </div>
+    <button type="submit">Submit</button>
+  </form>
+
+  <p id="status"></p>
 
   <script src="script.js"></script>
 </body>
