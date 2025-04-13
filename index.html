@@ -6,7 +6,100 @@
   <title>Book a Meeting with Neeraj</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <style>
-    /* Your existing CSS here */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f2f5;
+      padding: 40px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: #fff;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .profile img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-right: 20px;
+    }
+
+    .profile h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    .slots {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .slot {
+      background-color: #f1f1f1;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .slot.selected {
+      background-color: #1890ff;
+      color: white;
+      font-weight: bold;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background-color: #1890ff;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .thankyou {
+      margin-top: 20px;
+      color: green;
+      display: none;
+      text-align: center;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -33,11 +126,13 @@
 
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script>
+    // Initialize Flatpickr for date selection
     flatpickr("#date", {
       minDate: "today",
       dateFormat: "Y-m-d"
     });
 
+    // Get the client ID from the URL parameter
     const urlParams = new URLSearchParams(window.location.search);
     const sid = urlParams.get("sid");
 
@@ -45,9 +140,11 @@
       alert("Missing client ID. Please use the correct link.");
     }
 
+    // Define slot container and selected slot variable
     const slotContainer = document.getElementById("slots");
     let selectedSlot = null;
 
+    // Generate the available time slots
     const generateSlots = () => {
       const startHour = 10;
       const endHour = 20;
@@ -64,6 +161,7 @@
           slotDiv.className = "slot";
           slotDiv.textContent = displayTime;
 
+          // Add click event to select time slot
           slotDiv.onclick = () => {
             document.querySelectorAll(".slot").forEach(el => el.classList.remove("selected"));
             slotDiv.classList.add("selected");
@@ -75,10 +173,13 @@
       }
     };
 
+    // Call the function to generate slots
     generateSlots();
 
+    // Book the appointment on button click
     document.getElementById("bookBtn").onclick = async () => {
       const selectedDate = document.getElementById("date").value;
+
       if (!selectedDate || !selectedSlot) {
         alert("Please select a date and time slot.");
         return;
@@ -86,7 +187,7 @@
 
       const airtableBaseId = "appePVNt5JXGHbCPm"; // ✅ Replace with your actual Base ID
       const airtableTable = "Appointments";        // ✅ Your Airtable table name
-      const airtableApiKey = "patinzdAtVnSptMDq2b574e7a2fa69204ba77022db29f8781fafdaef142689e76ff9e909336c5c954"; // Secure API key is important!
+      const airtableApiKey = "patinzdAtVnSptMDq2b574e7a2fa69204ba77022db29f8781fafdaef142689e76ff9e909336c5c954"; // Ensure your API key is correct
 
       try {
         const response = await fetch(`https://api.airtable.com/v0/${airtableBaseId}/${airtableTable}`, {
@@ -106,7 +207,6 @@
 
         if (response.ok) {
           document.getElementById("thankyouMessage").style.display = "block";
-          document.getElementById("bookBtn").disabled = true;  // Disable the button to prevent multiple bookings
         } else {
           const error = await response.json();
           console.error(error);
