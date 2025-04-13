@@ -1,33 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Appointment Booking</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book a Meeting with Neeraj</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <style>
-    body { font-family: sans-serif; max-width: 400px; margin: 40px auto; }
-    label, input, textarea { display: block; margin: 10px 0; width: 100%; }
-    button { padding: 10px 20px; background: #007BFF; color: white; border: none; cursor: pointer; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f2f5;
+      padding: 40px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: #fff;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .profile img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-right: 20px;
+    }
+
+    .profile h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    .slots {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .slot {
+      background-color: #f1f1f1;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .slot.selected {
+      background-color: #1890ff;
+      color: white;
+      font-weight: bold;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background-color: #1890ff;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .thankyou {
+      margin-top: 20px;
+      color: green;
+      display: none;
+      text-align: center;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
 
-  <h2>Book Your Appointment</h2>
+  <div class="container">
+    <div class="profile">
+      <img src="https://i.ibb.co/k4GJyfx/neeraj.jpg" alt="Neeraj Photo">
+      <h2>Book a Meeting with Neeraj</h2>
+    </div>
 
-  <form id="appointment-form">
-    <label for="date">Date:</label>
-    <input type="date" id="date" required>
+    <div class="form-group">
+      <label for="date">Choose a Date</label>
+      <input type="text" id="date" placeholder="Select a date" readonly>
+    </div>
 
-    <label for="time">Time:</label>
-    <input type="time" id="time" required>
+    <div class="form-group">
+      <label>Select a Time Slot</label>
+      <div class="slots" id="slots"></div>
+    </div>
 
-    <label for="notes">Notes (optional):</label>
-    <textarea id="notes"></textarea>
+    <button id="bookBtn">Book Appointment</button>
+    <div class="thankyou" id="thankyouMessage">✅ Appointment booked successfully!</div>
+  </div>
 
-    <button type="submit">Submit</button>
-  </form>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    flatpickr("#date", {
+      minDate: "today",
+      dateFormat: "Y-m-d"
+    });
 
-  <p id="status"></p>
+    const urlParams = new URLSearchParams(window.location.search);
+    const sid = urlParams.get("sid");
 
-  <script src="script.js"></script>
+    if (!sid) {
+      alert("Missing client ID. Please use the correct link.");
+    }
+
+    const slotContainer = document.getElementById("slots");
+    let selectedSlot = null;
+
+    const generateSlots = () => {
+      const startHour = 10;
+      const endHour = 20;
+
+      for (let hour = startHour; hour < endHour; hour++) {
+        ["00", "30"].forEach(min => {
+          const time = `${hour.toString().padStart(2, '0')}:${min}`;
+          const displayTime = new Date(`1970-01-01T${time}:00`).toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+
+          const slotDiv = document.createElement("div");
+          slotDiv.className = "slot";
+          slotDiv.textContent = displayTime;
+
+          slotDiv.onclick = () => {
+            document.querySelectorAll(".slot").forEach(el => el.classList.remove("selected"));
+            slotDiv.classList.add("selected");
+            selectedSlot = displayTime;
+          };
+
+          slotContainer.appendChild(slotDiv);
+        });
+      }
+    };
+
+    generateSlots();
+
+    document.getElementById("bookBtn").onclick = async () => {
+      const selectedDate = document.getElementById("date").value;
+      if (!selectedDate || !selectedSlot) {
+        alert("Please select a date and time slot.");
+        return;
+      }
+
+      const airtableBaseId = "appePVNt5JXGHbCPm"; // ✅ Replace with your actual Base ID
+      const airtableTable = "Appointments";        // ✅ Your Airtable table name
+      const airtableApiKey = "patinzdAtVnSptMDq2b574e7a2fa69204ba77022db29f8781fafdaef142689e76ff9e909336c5c954";
+
+      try {
+        const response = await fetch(`https://api.airtable.com/v0/${airtableBaseId}/${airtableTable}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${airtableApiKey}`
+          },
+          body: JSON.stringify({
+            fields: {
+              "Client ID": sid,
+              "Date": selectedDate,
+              "Time": selectedSlot
+            }
+          })
+        });
+
+        if (response.ok) {
+          document.getElementById("thankyouMessage").style.display = "block";
+        } else {
+          const error = await response.json();
+          console.error(error);
+          alert("Booking failed. Check console for error.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Something went wrong while booking.");
+      }
+    };
+  </script>
 </body>
 </html>
