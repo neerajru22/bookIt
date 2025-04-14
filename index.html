@@ -1,138 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Book a Meeting with Neeraj</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
-      display: flex;
-      justify-content: center;
-      padding-top: 40px;
-    }
-
-    .container {
-      background: white;
-      border-radius: 10px;
-      padding: 30px;
-      width: 90%;
-      max-width: 500px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
-
-    .profile img {
-      width: 100px;
-      border-radius: 50%;
-      display: block;
-      margin: auto;
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .form-group {
-      margin: 15px 0;
-    }
-
-    .slots {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .slot {
-      padding: 8px 14px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .slot.selected {
-      background-color: #28a745;
-      color: white;
-      border-color: #28a745;
-    }
-
-    #bookBtn {
-      margin-top: 20px;
-      width: 100%;
-      padding: 12px;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .thankyou {
-      display: none;
-      margin-top: 15px;
-      color: green;
-      text-align: center;
-    }
-  </style>
-</head>
-<body>
-
-<div class="container">
-  <div class="profile">
-    <img src="https://i.imgur.com/snAYZUL.png" alt="Neeraj Photo">
-    <h2>Book a Meeting with Neeraj</h2>
-  </div>
-
-  <div class="form-group">
-    <label for="date">Choose a Date</label>
-    <input type="text" id="date" placeholder="Select a date" readonly>
-  </div>
-
-  <div class="form-group">
-    <label>Select a Time Slot</label>
-    <div class="slots" id="slots"></div>
-  </div>
-
-  <button id="bookBtn">Book Appointment</button>
-  <div class="thankyou" id="thankyouMessage">✅ Appointment booked successfully!</div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-  flatpickr("#date", { minDate: "today", dateFormat: "Y-m-d" });
+  flatpickr("#date", {
+    minDate: "today",
+    dateFormat: "Y-m-d",
+    onChange: async function(selectedDates, dateStr) {
+      await generateSlots(dateStr);
+    }
+  });
+
 
   const AIRTABLE_API_KEY = "patinzdAtVnSptMDq.7f767ff0ed465c36042c7708c5c205164a7d53d21aeb2267efb4f7411e503826";
   const AIRTABLE_BASE_ID = "appePVNt5JXGHbCPm";
   const AIRTABLE_TABLE_NAME = "Appointments";
-
   const sid = new URLSearchParams(window.location.search).get("sid") || "test123";
 
   const slotContainer = document.getElementById("slots");
   let selectedSlot = null;
 
-  function generateSlots() {
+  async function generateSlots(date = "") {
+    slotContainer.innerHTML = "";
+    selectedSlot = null;
+
+    // Get already booked times for the date
+    let bookedTimes = [];
+    if (date) {
+      const queryDate = encodeURIComponent(`{Date} = '${date}'`);
+      const res = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}?filterByFormula=${queryDate}`, {
+        headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` }
+      });
+      const data = await res.json();
+      bookedTimes = data.records.map(r => r.fields["Time"]);
+    }
+
+    // Generate slots
     const start = 10, end = 20;
     for (let h = start; h < end; h++) {
       ["00", "30"].forEach(m => {
         const time = `${h.toString().padStart(2, "0")}:${m}`;
         const timeDisplay = new Date(`2024-01-01T${time}`).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
         const div = document.createElement("div");
         div.className = "slot";
         div.textContent = timeDisplay;
-        div.onclick = () => {
-          document.querySelectorAll(".slot").forEach(el => el.classList.remove("selected"));
-          div.classList.add("selected");
-          selectedSlot = timeDisplay;
-        };
+
+        if (bookedTimes.includes(timeDisplay)) {
+          div.style.opacity = 0.5;
+          div.style.pointerEvents = "none";
+          div.textContent += " ❌";
+        } else {
+          div.onclick = () => {
+            document.querySelectorAll(".slot").forEach(el => el.classList.remove("selected"));
+            div.classList.add("selected");
+            selectedSlot = timeDisplay;
+          };
+        }
+
         slotContainer.appendChild(div);
       });
     }
   }
 
-  generateSlots();
-
+  // Book the selected slot
   document.getElementById("bookBtn").onclick = async () => {
     const selectedDate = document.getElementById("date").value;
     if (!selectedDate || !selectedSlot) {
@@ -157,11 +84,13 @@
 
     if (response.ok) {
       document.getElementById("thankyouMessage").style.display = "block";
+      await generateSlots(selectedDate); // Refresh slots
     } else {
       const data = await response.json();
       alert("Booking failed: " + (data?.error?.message || "Unknown error"));
     }
   };
+
+  // Init blank
+  generateSlots();
 </script>
-</body>
-</html>
