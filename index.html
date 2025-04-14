@@ -1,200 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Booking System</title>
-
-  <!-- Include Flatpickr CSS -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book a Meeting with Neeraj</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
-
   <style>
     body {
       font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      display: flex;
+      justify-content: center;
+      padding-top: 40px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 10px;
+      padding: 30px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    .profile img {
+      width: 100px;
+      border-radius: 50%;
+      display: block;
+      margin: auto;
     }
 
     h2 {
       text-align: center;
+      margin-bottom: 20px;
     }
 
-    /* Style for time slots */
+    .form-group {
+      margin: 15px 0;
+    }
+
+    .slots {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
     .slot {
-      padding: 10px;
-      margin: 5px;
+      padding: 8px 14px;
       border: 1px solid #ccc;
+      border-radius: 6px;
       cursor: pointer;
-      display: inline-block;
-      background-color: #f0f0f0;
-      border-radius: 5px;
-      width: 120px;
-      text-align: center;
-      transition: background-color 0.3s;
-    }
-
-    .slot:hover {
-      background-color: #d9d9d9;
     }
 
     .slot.selected {
-      background-color: #4caf50;
+      background-color: #28a745;
       color: white;
-    }
-
-    .slot.disabled {
-      opacity: 0.5;
-      pointer-events: none;
-      background-color: #ccc;
-    }
-
-    /* Styling for the booking section */
-    #slots {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 20px;
-    }
-
-    #thankyouMessage {
-      display: none;
-      font-weight: bold;
-      color: green;
-      text-align: center;
-      margin-top: 20px;
+      border-color: #28a745;
     }
 
     #bookBtn {
-      display: block;
-      margin: 20px auto;
-      padding: 10px 20px;
-      background-color: #4caf50;
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background: #007bff;
       color: white;
       border: none;
+      border-radius: 6px;
       cursor: pointer;
-      font-size: 16px;
-      border-radius: 5px;
     }
 
-    #bookBtn:hover {
-      background-color: #45a049;
+    .thankyou {
+      display: none;
+      margin-top: 15px;
+      color: green;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <h2>Booking System</h2>
 
-  <!-- Date picker input field -->
-  <input type="text" id="date" placeholder="Select a date">
-  
-  <!-- Slot container -->
-  <div id="slots"></div>
+<div class="container">
+  <div class="profile">
+    <img src="https://i.ibb.co/k4GJyfx/neeraj.jpg" alt="Neeraj Photo">
+    <h2>Book a Meeting with Neeraj</h2>
+  </div>
 
-  <!-- Book Button -->
-  <button id="bookBtn">Book Now</button>
+  <div class="form-group">
+    <label for="date">Choose a Date</label>
+    <input type="text" id="date" placeholder="Select a date" readonly>
+  </div>
 
-  <!-- Thank you message -->
-  <div id="thankyouMessage">Thank you for your booking!</div>
+  <div class="form-group">
+    <label>Select a Time Slot</label>
+    <div class="slots" id="slots"></div>
+  </div>
 
-  <!-- Include Flatpickr JS -->
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script>
-    const AIRTABLE_API_KEY = "patinzdAtVnSptMDq.7f767ff0ed465c36042c7708c5c205164a7d53d21aeb2267efb4f7411e503826";
-    const AIRTABLE_BASE_ID = "appePVNt5JXGHbCPm";
-    const AIRTABLE_TABLE_NAME = "Appointments";
-    const sid = new URLSearchParams(window.location.search).get("sid") || "test123";
-    
-    const slotContainer = document.getElementById("slots");
-    let selectedSlot = null;
+  <button id="bookBtn">Book Appointment</button>
+  <div class="thankyou" id="thankyouMessage">✅ Appointment booked successfully!</div>
+</div>
 
-    // Initialize Flatpickr for date selection
-    flatpickr("#date", {
-      minDate: "today",  // Ensure only today and future dates are available
-      dateFormat: "Y-m-d", // Specify the date format
-      onChange: async function(selectedDates, dateStr) {
-        await generateSlots(dateStr);  // Trigger slot generation when a date is selected
-      }
-    });
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  flatpickr("#date", { minDate: "today", dateFormat: "Y-m-d" });
 
-    // Generate slots for the selected date
-    async function generateSlots(date = "") {
-      slotContainer.innerHTML = "";  // Clear existing slots
-      selectedSlot = null;  // Reset selected slot
+  const AIRTABLE_API_KEY = "patinzdAtVnSptMDq.7f767ff0ed465c36042c7708c5c205164a7d53d21aeb2267efb4f7411e503826";
+  const AIRTABLE_BASE_ID = "appePVNt5JXGHbCPm";
+  const AIRTABLE_TABLE_NAME = "Appointments";
 
-      let bookedTimes = [];
-      if (date) {
-        // Query Airtable for booked slots on the selected date
-        const queryDate = encodeURIComponent(`{Date} = '${date}'`);
-        const res = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}?filterByFormula=${queryDate}`, {
-          headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` }
-        });
-        const data = await res.json();
-        bookedTimes = data.records.map(r => r.fields["Time"]);
-      }
+  const sid = new URLSearchParams(window.location.search).get("sid") || "test123";
 
-      // Generate available time slots
-      const start = 10, end = 20;
-      for (let h = start; h < end; h++) {
-        ["00", "30"].forEach(m => {
-          const time = `${h.toString().padStart(2, "0")}:${m}`;
-          const timeDisplay = new Date(`2024-01-01T${time}`).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const slotContainer = document.getElementById("slots");
+  let selectedSlot = null;
 
-          const div = document.createElement("div");
-          div.className = "slot";
-          div.textContent = timeDisplay;
+  function generateSlots() {
+    const start = 10, end = 20;
+    for (let h = start; h < end; h++) {
+      ["00", "30"].forEach(m => {
+        const time = `${h.toString().padStart(2, "0")}:${m}`;
+        const timeDisplay = new Date(`2024-01-01T${time}`).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        const div = document.createElement("div");
+        div.className = "slot";
+        div.textContent = timeDisplay;
+        div.onclick = () => {
+          document.querySelectorAll(".slot").forEach(el => el.classList.remove("selected"));
+          div.classList.add("selected");
+          selectedSlot = timeDisplay;
+        };
+        slotContainer.appendChild(div);
+      });
+    }
+  }
 
-          // Disable slots that are already booked
-          if (bookedTimes.includes(timeDisplay)) {
-            div.classList.add("disabled");
-            div.textContent += " ❌";  // Mark as unavailable
-          } else {
-            // Enable clicking for available slots
-            div.onclick = () => {
-              document.querySelectorAll(".slot").forEach(el => el.classList.remove("selected"));
-              div.classList.add("selected");
-              selectedSlot = timeDisplay;  // Store the selected time
-            };
-          }
+  generateSlots();
 
-          slotContainer.appendChild(div);  // Append the slot to the container
-        });
-      }
+  document.getElementById("bookBtn").onclick = async () => {
+    const selectedDate = document.getElementById("date").value;
+    if (!selectedDate || !selectedSlot) {
+      alert("Please select both a date and time slot.");
+      return;
     }
 
-    // Book the selected slot
-    document.getElementById("bookBtn").onclick = async () => {
-      const selectedDate = document.getElementById("date").value;
-      if (!selectedDate || !selectedSlot) {
-        alert("Please select both a date and time slot.");
-        return;
-      }
-
-      // Save the booking to Airtable
-      const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-          "Content-Type": "application/json",
+    const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${AIRTABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fields: {
+          "Client ID": sid,
+          "Date": selectedDate,
+          "Time": selectedSlot,
         },
-        body: JSON.stringify({
-          fields: {
-            "Client ID": sid,
-            "Date": selectedDate,
-            "Time": selectedSlot,
-          },
-        }),
-      });
+      }),
+    });
 
-      if (response.ok) {
-        document.getElementById("thankyouMessage").style.display = "block";  // Show confirmation message
-        await generateSlots(selectedDate);  // Refresh the slots to reflect the booking
-      } else {
-        const data = await response.json();
-        alert("Booking failed: " + (data?.error?.message || "Unknown error"));
-      }
-    };
-
-    // Init with blank slots
-    generateSlots();
-  </script>
+    if (response.ok) {
+      document.getElementById("thankyouMessage").style.display = "block";
+    } else {
+      const data = await response.json();
+      alert("Booking failed: " + (data?.error?.message || "Unknown error"));
+    }
+  };
+</script>
 </body>
 </html>
