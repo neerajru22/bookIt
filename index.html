@@ -6,23 +6,35 @@
   <title>Book a Meeting with Neeraj</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <style>
+    :root {
+      --primary: #1a237e; /* Vipany deep blue */
+      --secondary: #4caf50; /* Green highlight */
+      --bg-light: #f9fafb;
+      --text-dark: #1f2937;
+      --card-bg: white;
+      --border: #d1d5db;
+    }
+
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #dbeafe, #f0fdf4);
+      background: linear-gradient(to bottom right, #e8f0fe, #e0f2f1);
       display: flex;
       justify-content: center;
+      align-items: center;
       padding: 50px 20px;
       min-height: 100vh;
+      color: var(--text-dark);
     }
 
     .container {
-      background: white;
+      background: var(--card-bg);
       border-radius: 16px;
       padding: 40px;
       width: 100%;
       max-width: 500px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
       text-align: center;
+      border: 1px solid #e5e7eb;
     }
 
     .profile img {
@@ -31,16 +43,16 @@
       border-radius: 50%;
       object-fit: cover;
       margin-bottom: 15px;
-      border: 3px solid #3b82f6;
+      border: 3px solid var(--primary);
     }
 
     h2 {
       margin-bottom: 20px;
-      color: #1f2937;
+      color: var(--primary);
     }
 
     .form-group {
-      margin: 20px 0;
+      margin: 25px 0;
       text-align: left;
     }
 
@@ -52,59 +64,62 @@
 
     input[type="text"] {
       width: 100%;
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #d1d5db;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
       font-size: 16px;
+      background: #f8fafc;
     }
 
     .slots {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
       margin-top: 10px;
     }
 
     .slot {
-      padding: 10px 16px;
-      border: 1px solid #9ca3af;
+      padding: 10px 14px;
+      border: 1px solid #cbd5e1;
       border-radius: 8px;
       cursor: pointer;
-      background-color: #f3f4f6;
+      background-color: #f1f5f9;
       transition: all 0.2s ease;
+      font-weight: 500;
     }
 
     .slot:hover {
-      background-color: #e0f2fe;
+      background-color: #d1e7dd;
     }
 
     .slot.selected {
-      background-color: #22c55e;
+      background-color: var(--secondary);
       color: white;
-      border-color: #22c55e;
+      border-color: var(--secondary);
     }
 
     #bookBtn {
       margin-top: 30px;
       width: 100%;
       padding: 14px;
-      background: #2563eb;
+      background: var(--primary);
       color: white;
       font-weight: bold;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       font-size: 16px;
+      transition: background 0.3s;
     }
 
     #bookBtn:hover {
-      background-color: #1d4ed8;
+      background-color: #0d1b5e;
     }
 
     .thankyou {
       display: none;
       margin-top: 20px;
-      color: #16a34a;
+      color: var(--secondary);
       font-weight: bold;
     }
   </style>
