@@ -4,154 +4,145 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Book a Meeting with Neeraj</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary: #f4b400;
+      --accent: #0f2c64;
+      --bg-dark: #0e1a2b;
+      --card-dark: #1c2a3a;
+      --text-light: #f1f5f9;
+      --text-muted: #94a3b8;
+      --slot-bg: #2e3c4f;
+      --slot-hover: #f4b400;
+      --slot-selected: #f4b400;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: 'Poppins', sans-serif;
-      background: #f3f3f3;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
       margin: 0;
       padding: 0;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      color: #4A4A4A;
+      color: var(--text-light);
     }
 
     .container {
-      background: #fff;
-      border-radius: 12px;
-      padding: 40px;
+      background: var(--card-dark);
+      border-radius: 16px;
+      padding: 32px;
       width: 90%;
-      max-width: 480px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s;
-      overflow: hidden;
-    }
-
-    .container:hover {
-      transform: scale(1.02);
+      max-width: 500px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     }
 
     .profile img {
-      width: 120px;
-      height: 120px;
+      width: 100px;
       border-radius: 50%;
-      object-fit: cover;
       display: block;
       margin: auto;
-      border: 5px solid #0d74c5;
+      border: 4px solid var(--primary);
     }
 
     h2 {
       text-align: center;
-      margin: 20px 0;
-      font-family: 'Playfair Display', serif;
-      font-size: 1.8em;
-      color: #0d74c5;
+      color: var(--primary);
+      margin: 18px 0 30px;
+      font-size: 24px;
+    }
+
+    label {
+      display: block;
       font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-light);
     }
 
     .form-group {
       margin: 20px 0;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
     }
 
-    .form-group label {
-      font-weight: 600;
-      color: #333;
-    }
-
-    .form-group input, .form-group select {
+    input[type="text"] {
+      width: 100%;
       padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #ddd;
+      border: 1px solid #334155;
+      background: #0f172a;
+      border-radius: 6px;
       font-size: 16px;
-      transition: all 0.3s ease;
-    }
-
-    .form-group input:focus, .form-group select:focus {
-      border-color: #0d74c5;
-      box-shadow: 0 0 6px rgba(13, 116, 197, 0.4);
+      color: var(--text-light);
     }
 
     .slots {
       display: flex;
       flex-wrap: wrap;
-      gap: 15px;
-      justify-content: space-between;
+      gap: 10px;
     }
 
     .slot {
-      padding: 14px 22px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s, transform 0.3s ease;
-      width: calc(33.333% - 10px);
+      flex: 1 1 calc(33% - 10px);
+      padding: 10px 12px;
+      background: var(--slot-bg);
+      border: 1px solid #334155;
+      border-radius: 8px;
       text-align: center;
-      font-size: 16px;
-      color: #555;
-      font-weight: 500;
-      background-color: #fff;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+      color: var(--text-light);
     }
 
     .slot:hover {
-      background-color: #0d74c5;
-      color: #fff;
-      transform: translateY(-3px);
+      background: var(--slot-hover);
+      color: #000;
+      border-color: var(--slot-hover);
     }
 
     .slot.selected {
-      background-color: #0d74c5;
-      color: white;
-      border-color: #0d74c5;
+      background: var(--slot-selected);
+      color: #000;
+      border-color: var(--slot-selected);
     }
 
     #bookBtn {
-      margin-top: 30px;
+      margin-top: 24px;
       width: 100%;
-      padding: 16px;
-      background: #0d74c5;
-      color: white;
-      font-size: 18px;
+      padding: 14px;
+      background: var(--primary);
+      color: #000;
+      font-size: 16px;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: background 0.3s ease, transform 0.3s ease;
+      transition: background 0.3s ease;
     }
 
     #bookBtn:hover {
-      background: #0a5a91;
-      transform: translateY(-2px);
+      background: #dba600;
     }
 
     .thankyou {
       display: none;
-      margin-top: 20px;
-      padding: 25px;
-      background-color: #f0f9ff;
-      color: #0078d4;
-      border: 2px solid #0078d4;
-      border-radius: 12px;
+      margin-top: 24px;
+      padding: 18px;
+      background-color: #14532d;
+      color: #4ade80;
+      border: 1px solid #166534;
+      border-radius: 10px;
       text-align: center;
-      font-size: 18px;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+      font-size: 16px;
     }
 
     @media (max-width: 500px) {
       .slot {
-        width: 48%;
-      }
-    }
-
-    @media (max-width: 320px) {
-      .slot {
-        width: 100%;
+        flex: 1 1 45%;
       }
     }
   </style>
@@ -183,7 +174,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-  flatpickr("#date", { minDate: "today", dateFormat: "Y-m-d" });
+  flatpickr("#date", {
+    minDate: "today",
+    dateFormat: "Y-m-d",
+    theme: "dark"
+  });
 
   const AIRTABLE_API_KEY = "patinzdAtVnSptMDq.7f767ff0ed465c36042c7708c5c205164a7d53d21aeb2267efb4f7411e503826";
   const AIRTABLE_BASE_ID = "appePVNt5JXGHbCPm";
@@ -239,15 +234,13 @@
 
       if (response.ok) {
         document.getElementById("formContent").style.display = "none";
+        document.getElementById("thankyouMessage").innerText = `Thanks! Your appointment on ${selectedDate} at ${selectedSlot} is confirmed.`;
         document.getElementById("thankyouMessage").style.display = "block";
-        document.getElementById("thankyouMessage").innerHTML = `✅ <strong>Your meeting is confirmed for ${selectedDate} at ${selectedSlot}.</strong><br><br>
-          You will receive a confirmation email and calendar invite shortly.`;
       } else {
-        const data = await response.json();
-        alert("Booking failed: " + (data?.error?.message || "Unknown error"));
+        alert("Something went wrong. Please try again.");
       }
     } catch (err) {
-      alert("Error while booking. Please try again.");
+      alert("Error booking appointment. Please check console.");
       console.error(err);
     }
   };
