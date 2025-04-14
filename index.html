@@ -4,100 +4,154 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Book a Meeting with Neeraj</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f0f4f8;
+      font-family: 'Poppins', sans-serif;
+      background: #f3f3f3;
       margin: 0;
       padding: 0;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      color: #4A4A4A;
     }
 
     .container {
-      background: white;
+      background: #fff;
       border-radius: 12px;
-      padding: 30px;
+      padding: 40px;
       width: 90%;
       max-width: 480px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s;
+      overflow: hidden;
+    }
+
+    .container:hover {
+      transform: scale(1.02);
     }
 
     .profile img {
-      width: 100px;
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
+      object-fit: cover;
       display: block;
       margin: auto;
+      border: 5px solid #0d74c5;
     }
 
     h2 {
       text-align: center;
-      margin: 16px 0 24px;
+      margin: 20px 0;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8em;
+      color: #0d74c5;
+      font-weight: 600;
     }
 
     .form-group {
-      margin: 18px 0;
+      margin: 20px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .form-group input, .form-group select {
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      border-color: #0d74c5;
+      box-shadow: 0 0 6px rgba(13, 116, 197, 0.4);
     }
 
     .slots {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 15px;
+      justify-content: space-between;
     }
 
     .slot {
-      padding: 10px 16px;
+      padding: 14px 22px;
       border: 1px solid #ccc;
-      border-radius: 6px;
+      border-radius: 10px;
       cursor: pointer;
-      transition: background 0.2s, color 0.2s;
+      transition: background 0.3s, transform 0.3s ease;
+      width: calc(33.333% - 10px);
+      text-align: center;
+      font-size: 16px;
+      color: #555;
+      font-weight: 500;
+      background-color: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     .slot:hover {
-      background: #f1f1f1;
+      background-color: #0d74c5;
+      color: #fff;
+      transform: translateY(-3px);
     }
 
     .slot.selected {
-      background-color: #28a745;
+      background-color: #0d74c5;
       color: white;
-      border-color: #28a745;
+      border-color: #0d74c5;
     }
 
     #bookBtn {
-      margin-top: 20px;
+      margin-top: 30px;
       width: 100%;
-      padding: 14px;
-      background: #007bff;
+      padding: 16px;
+      background: #0d74c5;
       color: white;
-      font-size: 16px;
+      font-size: 18px;
       border: none;
-      border-radius: 6px;
+      border-radius: 10px;
       cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease;
     }
 
     #bookBtn:hover {
-      background: #0069d9;
+      background: #0a5a91;
+      transform: translateY(-2px);
     }
 
     .thankyou {
       display: none;
       margin-top: 20px;
-      padding: 15px;
-      background-color: #e8f5e9;
-      color: #2e7d32;
-      border: 1px solid #c8e6c9;
-      border-radius: 8px;
+      padding: 25px;
+      background-color: #f0f9ff;
+      color: #0078d4;
+      border: 2px solid #0078d4;
+      border-radius: 12px;
       text-align: center;
-      font-size: 16px;
+      font-size: 18px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
     }
 
     @media (max-width: 500px) {
       .slot {
-        flex: 1 1 40%;
-        text-align: center;
+        width: 48%;
+      }
+    }
+
+    @media (max-width: 320px) {
+      .slot {
+        width: 100%;
       }
     }
   </style>
@@ -186,8 +240,7 @@
       if (response.ok) {
         document.getElementById("formContent").style.display = "none";
         document.getElementById("thankyouMessage").style.display = "block";
-        document.getElementById("thankyouMessage").innerHTML = `
-          ✅ <strong>Your meeting is confirmed for ${selectedDate} at ${selectedSlot}.</strong><br><br>
+        document.getElementById("thankyouMessage").innerHTML = `✅ <strong>Your meeting is confirmed for ${selectedDate} at ${selectedSlot}.</strong><br><br>
           You will receive a confirmation email and calendar invite shortly.`;
       } else {
         const data = await response.json();
@@ -199,5 +252,6 @@
     }
   };
 </script>
+
 </body>
 </html>
