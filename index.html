@@ -8,110 +8,103 @@
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #1f005c, #5b247a, #1f005c);
-      color: #fff;
+      background: linear-gradient(to right, #dbeafe, #f0fdf4);
       display: flex;
       justify-content: center;
-      align-items: center;
       padding: 50px 20px;
       min-height: 100vh;
     }
 
     .container {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(15px);
+      background: white;
       border-radius: 16px;
-      padding: 30px;
+      padding: 40px;
       width: 100%;
       max-width: 500px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      text-align: center;
     }
 
     .profile img {
       width: 100px;
+      height: 100px;
       border-radius: 50%;
-      display: block;
-      margin: 0 auto 10px;
-      border: 3px solid #fff;
+      object-fit: cover;
+      margin-bottom: 15px;
+      border: 3px solid #3b82f6;
     }
 
     h2 {
-      text-align: center;
-      margin-bottom: 25px;
-      color: #fff;
-      font-weight: 600;
+      margin-bottom: 20px;
+      color: #1f2937;
+    }
+
+    .form-group {
+      margin: 20px 0;
+      text-align: left;
     }
 
     label {
       display: block;
-      margin-bottom: 5px;
-      color: #ddd;
+      font-weight: 600;
+      margin-bottom: 8px;
     }
 
     input[type="text"] {
       width: 100%;
       padding: 10px;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-      background: rgba(255,255,255,0.2);
-      color: #fff;
-      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      font-size: 16px;
     }
 
     .slots {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
+      margin-top: 10px;
     }
 
     .slot {
       padding: 10px 16px;
-      border: 2px solid #bbb;
+      border: 1px solid #9ca3af;
       border-radius: 8px;
       cursor: pointer;
-      transition: 0.3s;
-      background: rgba(255,255,255,0.1);
-      color: #fff;
+      background-color: #f3f4f6;
+      transition: all 0.2s ease;
     }
 
     .slot:hover {
-      border-color: #9f70fd;
+      background-color: #e0f2fe;
     }
 
     .slot.selected {
-      background-color: #9f70fd;
-      border-color: #9f70fd;
+      background-color: #22c55e;
       color: white;
-      box-shadow: 0 0 10px #9f70fd;
+      border-color: #22c55e;
     }
 
     #bookBtn {
-      margin-top: 20px;
+      margin-top: 30px;
       width: 100%;
       padding: 14px;
-      background: #9f70fd;
+      background: #2563eb;
       color: white;
+      font-weight: bold;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       font-size: 16px;
-      font-weight: bold;
-      box-shadow: 0 0 10px #9f70fd;
-      transition: 0.3s;
     }
 
     #bookBtn:hover {
-      background: #7e4acb;
-      box-shadow: 0 0 14px #b187ff;
+      background-color: #1d4ed8;
     }
 
     .thankyou {
       display: none;
       margin-top: 20px;
-      color: #90ee90;
-      text-align: center;
+      color: #16a34a;
       font-weight: bold;
     }
   </style>
@@ -120,7 +113,7 @@
 
 <div class="container">
   <div class="profile">
-    <img src="https://i.imgur.com/snAYZUL.png" alt="Neeraj Photo">
+    <img src="https://i.imgur.com/snAYZUL.png" alt="Neeraj's Photo">
     <h2>Book a Meeting with Neeraj</h2>
   </div>
 
@@ -142,8 +135,8 @@
 <script>
   flatpickr("#date", { minDate: "today", dateFormat: "Y-m-d" });
 
-  const AIRTABLE_API_KEY = "YOUR_AIRTABLE_KEY";
-  const AIRTABLE_BASE_ID = "YOUR_BASE_ID";
+  const AIRTABLE_API_KEY = "patinzdAtVnSptMDq.7f767ff0ed465c36042c7708c5c205164a7d53d21aeb2267efb4f7411e503826";
+  const AIRTABLE_BASE_ID = "appePVNt5JXGHbCPm";
   const AIRTABLE_TABLE_NAME = "Appointments";
 
   const sid = new URLSearchParams(window.location.search).get("sid") || "test123";
