@@ -40,8 +40,34 @@
       border-radius: 16px;
       padding: 32px;
       width: 90%;
-      max-width: 500px;
+      max-width: 1000px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .layout {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .left, .right {
+      flex: 1;
+    }
+
+    @media (min-width: 768px) {
+      .layout {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+
+      .left {
+        padding-right: 24px;
+        border-right: 1px solid #334155;
+      }
+
+      .right {
+        padding-left: 24px;
+      }
     }
 
     .profile img {
@@ -192,44 +218,50 @@
 <body>
 
 <div class="container">
-  <div class="profile">
-    <img src="https://i.imgur.com/snAYZUL.png" alt="Neeraj Photo">
-    <div class="info">
-      <p class="name">Neeraj Ramavathu</p>
-      <p>Business Development Manager</p>
-      <p><a href="mailto:neeraj.r@vipanyglobal.com" style="color: var(--text-light); text-decoration: none;">neeraj.r@vipanyglobal.com</a></p>
-      <h2>Let's Connect!</h2>
-    </div>
-  </div>
+  <div class="layout">
+    <div class="left">
+      <div class="profile">
+        <img src="https://i.imgur.com/snAYZUL.png" alt="Neeraj Photo">
+        <div class="info">
+          <p class="name">Neeraj Ramavathu</p>
+          <p>Business Development Manager</p>
+          <p><a href="mailto:neeraj.r@vipanyglobal.com" style="color: var(--text-light); text-decoration: none;">neeraj.r@vipanyglobal.com</a></p>
+          <h2>Let's Connect!</h2>
+        </div>
+      </div>
 
-  <div id="formContent">
-    <div class="form-group">
-      <label for="date">Choose a Date</label>
-      <input type="text" id="date" placeholder="Select a date" readonly>
-    </div>
-
-    <div class="form-group">
-      <label>Select a Time Slot</label>
-      <div class="slots" id="slots"></div>
-    </div>
-
-    <div class="form-group">
-      <label for="comment">Add a Comment (Optional)</label>
-      <input type="text" id="comment" placeholder="Any notes or queries?">
+      <div class="brands">
+        <p style="text-align:center; margin-top: 30px; color: var(--text-muted); font-size: 14px;">Our Services</p>
+        <div class="logos">
+          <a href="https://vipanyglobal.com" target="_blank"><img src="https://vipanyglobal.com/wp-content/uploads/2024/02/Vipany-Global-Logo-Final-Updated-27-27-scaled-1.jpg" alt="Vipany Global"></a>
+          <a href="https://recruitmentschool.in" target="_blank"><img src="https://recruitmentschool.in/wp-content/uploads/2021/05/Recruitmentschool-Logo-768x412.jpg" alt="Recruitment School"></a>
+          <a href="https://talentchanakya.com" target="_blank"><img src="https://talentchanakya.com/wp-content/uploads/2021/02/logo-dark-300x119.png" alt="Talent Chanakya"></a>
+          <a href="https://hiringbot.in" target="_blank"><img src="https://www.hiringbot.in/wp-content/uploads/sites/5/2018/04/logo-final.png" alt="Hiring Bot"></a>
+        </div>
+      </div>
     </div>
 
-    <button id="bookBtn">Book Appointment</button>
-  </div>
+    <div class="right">
+      <div id="formContent">
+        <div class="form-group">
+          <label for="date">Choose a Date</label>
+          <input type="text" id="date" placeholder="Select a date" readonly>
+        </div>
 
-  <div class="thankyou" id="thankyouMessage"></div>
+        <div class="form-group">
+          <label>Select a Time Slot</label>
+          <div class="slots" id="slots"></div>
+        </div>
 
-  <div class="brands">
-    <p style="text-align:center; margin-top: 30px; color: var(--text-muted); font-size: 14px;">Our Services</p>
-    <div class="logos">
-      <a href="https://vipanyglobal.com" target="_blank"><img src="https://vipanyglobal.com/wp-content/uploads/2024/02/Vipany-Global-Logo-Final-Updated-27-27-scaled-1.jpg" alt="Vipany Global"></a>
-      <a href="https://recruitmentschool.in" target="_blank"><img src="https://recruitmentschool.in/wp-content/uploads/2021/05/Recruitmentschool-Logo-768x412.jpg" alt="Recruitment School"></a>
-      <a href="https://talentchanakya.com" target="_blank"><img src="https://talentchanakya.com/wp-content/uploads/2021/02/logo-dark-300x119.png" alt="Talent Chanakya"></a>
-      <a href="https://hiringbot.in" target="_blank"><img src="https://www.hiringbot.in/wp-content/uploads/sites/5/2018/04/logo-final.png" alt="Hiring Bot"></a>
+        <div class="form-group">
+          <label for="comment">Add a Comment (Optional)</label>
+          <input type="text" id="comment" placeholder="Any notes or queries?">
+        </div>
+
+        <button id="bookBtn">Book Appointment</button>
+      </div>
+
+      <div class="thankyou" id="thankyouMessage"></div>
     </div>
   </div>
 </div>
@@ -242,7 +274,7 @@
     theme: "dark"
   });
 
-  const AIRTABLE_API_KEY = "patinzdAtVnSptMDq.7f767ff0ed465c36042c7708c5c205164a7d53d21aeb2267efb4f7411e503826";
+   const AIRTABLE_API_KEY = "patinzdAtVnSptMDq.7f767ff0ed465c36042c7708c5c205164a7d53d21aeb2267efb4f7411e503826";
   const AIRTABLE_BASE_ID = "appePVNt5JXGHbCPm";
   const AIRTABLE_TABLE_NAME = "Appointments";
   const sid = new URLSearchParams(window.location.search).get("sid") || "test123";
