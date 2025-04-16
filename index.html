@@ -331,7 +331,11 @@
 
       if (response.ok) {
         document.getElementById("formContent").style.display = "none";
-        document.getElementById("thankyouMessage").innerText = `Thanks! Your appointment on ${selectedDate} at ${selectedSlot} is confirmed.`;
+        document.getElementById("thankyouMessage").innerHTML = `
+  <p>✅ Thanks! Your appointment on <strong>${selectedDate}</strong> at <strong>${selectedSlot}</strong> is confirmed.</p>
+  <p>📩 You will receive an invite link shortly over mail. Kindly acknowledge.</p>
+`;
+
         document.getElementById("thankyouMessage").style.display = "block";
       } else {
         alert("Something went wrong. Please try again.");
