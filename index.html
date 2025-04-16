@@ -38,60 +38,41 @@
     .container {
       background: var(--card-dark);
       border-radius: 16px;
-      padding: 0;
-      width: 90%;
-      max-width: 900px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-      display: flex;
-      flex-direction: row;
-      overflow: hidden;
-    }
-
-    .left, .right {
       padding: 32px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     }
 
-    .left {
-      width: 40%;
-      background: #122337;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .left img {
+    .profile img {
       width: 100px;
       border-radius: 50%;
-      margin-bottom: 16px;
+      display: block;
+      margin: auto;
     }
 
-    .left .name {
-      font-size: 20px;
-      font-weight: 600;
+    h2 {
+      text-align: center;
       color: var(--primary);
-      margin: 8px 0;
+      margin: 18px 0 10px;
+      font-size: 24px;
     }
 
-    .left p {
+    .info {
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    .info p {
       margin: 4px 0;
       font-size: 14px;
       color: var(--text-muted);
     }
 
-    .right {
-      width: 60%;
-    }
-
-    h2 {
-      color: var(--primary);
-      font-size: 24px;
-      margin-top: 0;
-    }
-
-    .form-group {
-      margin: 20px 0;
+    .info p.name {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-light);
     }
 
     label {
@@ -99,6 +80,10 @@
       font-weight: 600;
       margin-bottom: 6px;
       color: var(--text-light);
+    }
+
+    .form-group {
+      margin: 20px 0;
     }
 
     input[type="text"] {
@@ -171,16 +156,33 @@
       font-size: 16px;
     }
 
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-      }
+    .brands {
+      margin-top: 40px;
+    }
 
-      .left, .right {
-        width: 100%;
-        padding: 24px;
-      }
+    .logos {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding-top: 12px;
+    }
 
+    .logos img {
+      max-height: 40px;
+      max-width: 120px;
+      object-fit: contain;
+      filter: grayscale(1);
+      transition: all 0.3s ease;
+    }
+
+    .logos img:hover {
+      filter: grayscale(0);
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 500px) {
       .slot {
         flex: 1 1 45%;
       }
@@ -190,30 +192,45 @@
 <body>
 
 <div class="container">
-  <div class="left">
-    <img src="https://i.imgur.com/snAYZUL.png" alt="Neeraj Ramavathu">
-    <p class="name">Neeraj Ramavathu</p>
-    <p>Business Development Manager</p>
-    <p><a href="mailto:neeraj.r@vipanyglobal.com" style="color: var(--text-light); text-decoration: none;">neeraj.r@vipanyglobal.com</a></p>
+  <div class="profile">
+    <img src="https://i.imgur.com/snAYZUL.png" alt="Neeraj Photo">
+    <div class="info">
+      <p class="name">Neeraj Ramavathu</p>
+      <p>Business Development Manager</p>
+      <p><a href="mailto:neeraj.r@vipanyglobal.com" style="color: var(--text-light); text-decoration: none;">neeraj.r@vipanyglobal.com</a></p>
+      <h2>Let's Connect!</h2>
+    </div>
   </div>
 
-  <div class="right">
-    <h2>Book a Meeting with Vipany</h2>
-    <div id="formContent">
-      <div class="form-group">
-        <label for="date">Choose a Date</label>
-        <input type="text" id="date" placeholder="Select a date" readonly>
-      </div>
-
-      <div class="form-group">
-        <label>Select a Time Slot</label>
-        <div class="slots" id="slots"></div>
-      </div>
-
-      <button id="bookBtn">Book Appointment</button>
+  <div id="formContent">
+    <div class="form-group">
+      <label for="date">Choose a Date</label>
+      <input type="text" id="date" placeholder="Select a date" readonly>
     </div>
 
-    <div class="thankyou" id="thankyouMessage"></div>
+    <div class="form-group">
+      <label>Select a Time Slot</label>
+      <div class="slots" id="slots"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="comment">Add a Comment (Optional)</label>
+      <input type="text" id="comment" placeholder="Any notes or queries?">
+    </div>
+
+    <button id="bookBtn">Book Appointment</button>
+  </div>
+
+  <div class="thankyou" id="thankyouMessage"></div>
+
+  <div class="brands">
+    <p style="text-align:center; margin-top: 30px; color: var(--text-muted); font-size: 14px;">Our Services</p>
+    <div class="logos">
+      <a href="https://vipanyglobal.com" target="_blank"><img src="https://vipanyglobal.com/wp-content/uploads/2024/02/Vipany-Global-Logo-Final-Updated-27-27-scaled-1.jpg" alt="Vipany Global"></a>
+      <a href="https://recruitmentschool.in" target="_blank"><img src="https://recruitmentschool.in/wp-content/uploads/2021/05/Recruitmentschool-Logo-768x412.jpg" alt="Recruitment School"></a>
+      <a href="https://talentchanakya.com" target="_blank"><img src="https://talentchanakya.com/wp-content/uploads/2021/02/logo-dark-300x119.png" alt="Talent Chanakya"></a>
+      <a href="https://hiringbot.in" target="_blank"><img src="https://www.hiringbot.in/wp-content/uploads/sites/5/2018/04/logo-final.png" alt="Hiring Bot"></a>
+    </div>
   </div>
 </div>
 
@@ -256,6 +273,8 @@
 
   document.getElementById("bookBtn").onclick = async () => {
     const selectedDate = document.getElementById("date").value;
+    const comment = document.getElementById("comment").value;
+
     if (!selectedDate || !selectedSlot) {
       alert("Please select both a date and time slot.");
       return;
@@ -273,6 +292,7 @@
             "Client ID": sid,
             "Date": selectedDate,
             "Time": selectedSlot,
+            "Comment": comment || ""
           },
         }),
       });
